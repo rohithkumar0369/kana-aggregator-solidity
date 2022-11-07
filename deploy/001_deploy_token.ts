@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const {deployer, tokenOwner} = await getNamedAccounts();
 
-  console.log(deployer)
+  // console.log(deployer)
 
   const diamondCutFacet = await deploy('DiamondCutFacet', {
     from: deployer,
