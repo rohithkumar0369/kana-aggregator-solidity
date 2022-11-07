@@ -1,11 +1,25 @@
-node_modules
+cache/
+artifacts/
+out/
+broadcast/
+
+coverage*
+typechain/
+
+# IDE settings
+.vscode/*
+!.vscode/settings.json.default
+!.vscode/launch.json.default
+!.vscode/extensions.json.default
+.idea
+
+node_modules/
 .env
-coverage
-coverage.json
-typechain
-typechain-types
 
-#Hardhat files
-cache
-artifacts
+.yalc
+yalc.lock
 
+contractsInfo.json
+
+yarn-error.log
+.env
