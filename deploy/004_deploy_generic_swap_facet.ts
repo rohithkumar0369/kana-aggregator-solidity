@@ -19,6 +19,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       const diamond = await ethers.getContract('KanaDiamond')
     
       await addOrReplaceFacets([genericSwapFacet], diamond.address)
+
+      const facet = await ethers.getContractAt('GenericSwapFacet',diamond.address)
+
+      console.log(facet.address)
 }
 
 export default func
