@@ -19,9 +19,9 @@ interface IKana {
 
     /// Events ///
 
-    event LiFiTransferStarted(IKana.BridgeData bridgeData);
+    event KanaTransferStarted(IKana.BridgeData bridgeData);
 
-    event LiFiTransferCompleted(
+    event KanaTransferCompleted(
         bytes32 indexed transactionId,
         address receivingAssetId,
         address receiver,

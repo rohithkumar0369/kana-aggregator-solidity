@@ -41,7 +41,7 @@ export async function addOrReplaceFacets(
     const addSelectors = []
 
     const selectors = getSelectors(f)
-    console.log("selectors: " + selectors)
+    
 
     for (const s of selectors) {
       const addr = await loupe.facetAddress(s)

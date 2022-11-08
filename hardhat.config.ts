@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
          // network_id: network_id,
          chainId: network_id,
          allowUnlimitedContractSize: false,
-         timeout: 1000000,
+         timeout: 60000,
          // isFork: true
     },
     goerli: {

@@ -47,15 +47,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         await tx.wait()
       }
 
+      console.log("approvedDEXs",JSON.stringify(approvedDEXs))
+
       // Approve function signatures
       console.log('Checking DEXs signatures whitelist...')
-      console.log("allowedFuncSignatures",allowedFuncSignatures)
       
-      const functionsApproved = await Promise.all(
-        allowedFuncSignatures.map((signature) => {
-          return dexMgr.isFunctionApproved(signature)
-        })
-      )
+
+      let functionsApproved :any[] = []
+   try{
+     functionsApproved = await Promise.all(
+      allowedFuncSignatures.map((signature) => {
+        return dexMgr.isFunctionApproved(signature)
+      })
+    )
+   }
+   catch(err){
+    console.log(err)
+   }
 
       console.log("approvedfunctions: " + functionsApproved)
   
