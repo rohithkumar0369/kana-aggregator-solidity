@@ -49,18 +49,22 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
       // Approve function signatures
       console.log('Checking DEXs signatures whitelist...')
-
+      console.log("allowedFuncSignatures",allowedFuncSignatures)
+      
       const functionsApproved = await Promise.all(
         allowedFuncSignatures.map((signature) => {
           return dexMgr.isFunctionApproved(signature)
         })
       )
+
+      console.log("approvedfunctions: " + functionsApproved)
   
       const allApproved = functionsApproved.reduce(
         (prev, curr) => prev && curr,
         true
       )
       
+      console.log("allApproved: " + allApproved)
       if (allApproved) {
         console.log('DEX signatures already whitelisted.')
       } else {

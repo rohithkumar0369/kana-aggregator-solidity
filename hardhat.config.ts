@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: 0,
-    tokenOwner: 1,
+    // tokenOwner: 1,
   },
   typechain: {
     outDir: 'typechain',
@@ -38,6 +38,9 @@ const config: HardhatUserConfig = {
   },
   paths: {
     sources: 'src',
+  },
+  mocha: {
+    timeout: 60000,
   },
 };
 export default config;

@@ -41,6 +41,7 @@ export async function addOrReplaceFacets(
     const addSelectors = []
 
     const selectors = getSelectors(f)
+    console.log("selectors: " + selectors)
 
     for (const s of selectors) {
       const addr = await loupe.facetAddress(s)
@@ -77,6 +78,7 @@ export async function addOrReplaceFacets(
   }
 
   console.log('Adding/Replacing facet(s)...')
+  console.log({diamondAddress, cut, initContract, initData})
   await doCut(diamondAddress, cut, initContract, initData)
 
   console.log('Done.')
@@ -92,6 +94,7 @@ export async function addFacets(
   for (const f of facets) {
     const selectors = getSelectors(f)
 
+  
     cut.push({
       facetAddress: f.address,
       action: FacetCutAction.Add,
@@ -162,8 +165,15 @@ async function doCut(
 
   const tx = await cutter.diamondCut(cut, initContract, initData)
   console.log('Diamond cut tx: ', tx.hash)
+//  try{
   const receipt = await tx.wait()
+  // console.log(receipt)
   if (!receipt.status) {
     throw Error(`Diamond upgrade failed: ${tx.hash}`)
   }
+//  }
+//  catch(err){
+//   console.log(err)
+//  }
+
 }

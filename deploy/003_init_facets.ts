@@ -14,6 +14,7 @@ const func: DeployFunction = async function () {
     
       try {
         await loupe.facets()
+        // console.log(await loupe.facets())
       } catch (e) {
         await addFacets([diamondLoupeFacet], diamond.address)
       }
