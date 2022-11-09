@@ -8,7 +8,7 @@ import { SwapperV2, LibSwap } from "../Helpers/SwapperV2.sol";
 import { Validatable } from "../Helpers/Validatable.sol";
 import { LibUtil } from "../Libraries/LibUtil.sol";
 import { InvalidReceiver } from "../Errors/GenericErrors.sol";
-
+import "hardhat/console.sol";
 /// @title Generic Swap Facet
 /// @author LI.FI (https://li.fi)
 /// @notice Provides functionality for swapping through ANY APPROVED DEX
@@ -43,13 +43,19 @@ contract GenericSwapFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         uint256 _minAmount,
         LibSwap.SwapData[] calldata _swapData
     ) external payable refundExcessNative(_receiver) nonReentrant {
+        console.log("working");
         if (LibUtil.isZeroAddress(_receiver)) {
             revert InvalidReceiver();
         }
 
+        console.log("working1");
+
         uint256 postSwapBalance = _depositAndSwap(_transactionId, _minAmount, _swapData, _receiver);
+        console.log("working2");
         address receivingAssetId = _swapData[_swapData.length - 1].receivingAssetId;
+        console.log("working3");
         LibAsset.transferAsset(receivingAssetId, _receiver, postSwapBalance);
+        console.log("working3");
 
         emit KanaSwappedGeneric(
             _transactionId,

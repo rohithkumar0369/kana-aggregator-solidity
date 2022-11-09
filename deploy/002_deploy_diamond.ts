@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { network , ethers} from 'hardhat'
+import { verifyContract } from './9999_verify_all_facets'
 
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -16,8 +17,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         args: [deployer, diamondCutFacet.address],
         log: true,
       })
+
+      await verifyContract(hre, 'KanaDiamond', {
+        address: KanaDiamond.address,
+        args: [deployer, diamondCutFacet.address],
+      })
 }
 
 export default func
-func.id = 'deploy_lifi_diamond'
-func.tags = ['LiFiDiamond']
+func.id = 'deploy_Kana_diamond'
+func.tags = ['KanaDiamond']

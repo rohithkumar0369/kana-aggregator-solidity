@@ -98,4 +98,5 @@ library LibAllowList {
 
         if (_contract.code.length == 0) revert InvalidContract();
     }
+    
 }

@@ -104,6 +104,7 @@ contract DexManagerFacet {
     /// @param _signatures the function signatures to allow/disallow
     /// @param _approval whether the function signatures should be allowed
     function batchSetFunctionApprovalBySignature(bytes4[] calldata _signatures, bool _approval) external {
+        console.log("calling");
         if (msg.sender != LibDiamond.contractOwner()) {
             LibAccess.enforceAccessControl();
         }

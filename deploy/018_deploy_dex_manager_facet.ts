@@ -1,96 +1,98 @@
-import { ethers, network } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { addOrReplaceFacets } from '../utils/diamond'
-import { DexManagerFacet } from '../typechain'
-import config from '../config/dexs'
-import allowedFuncSignatures from '../config/dexfuncs'
+import { ethers, network } from "hardhat";
+import { DeployFunction } from "hardhat-deploy/types";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { addOrReplaceFacets } from "../utils/diamond";
+import { DexManagerFacet } from "../typechain";
+import config from "../config/dexs";
+import allowedFuncSignatures from "../config/dexfuncs";
+import { verifyContract } from "./9999_verify_all_facets";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const { deployments, getNamedAccounts } = hre;
+  const { deploy } = deployments;
 
-    const { deployments, getNamedAccounts } = hre
-    const { deploy } = deployments
-  
-    const { deployer } = await getNamedAccounts()
-  
-    await deploy('DexManagerFacet', {
-      from: deployer,
-      log: true
-    })
+  const { deployer } = await getNamedAccounts();
 
-    const dexManagerFacet = await ethers.getContract('DexManagerFacet')
+  await deploy("DexManagerFacet", {
+    from: deployer,
+    log: true,
+  });
 
-    const diamond = await ethers.getContract('KanaDiamond')
-  
-    await addOrReplaceFacets([dexManagerFacet], diamond.address)
+  const dexManagerFacet = await ethers.getContract("DexManagerFacet");
 
-    const dexs = config[network.name].map((d: string) => d.toLowerCase())
+  const diamond = await ethers.getContract("KanaDiamond");
 
-    if (dexs && dexs.length) {
-      console.log('Checking DEXs whitelist...')
+  await addOrReplaceFacets([dexManagerFacet], diamond.address);
 
-      const dexMgr = <DexManagerFacet>(
-        await ethers.getContractAt('DexManagerFacet', diamond.address)
-      )
+  const dexs = config[network.name].map((d: string) => d.toLowerCase());
 
-      const approvedDEXs = (await dexMgr.approvedDexs()).map((d: string) =>
-        d.toLowerCase()
-      )
+  if (dexs && dexs.length) {
+    console.log("Checking DEXs whitelist...");
 
-      let tx
+    const dexMgr = <DexManagerFacet>(
+      await ethers.getContractAt("DexManagerFacet", diamond.address)
+    );
 
-      if (JSON.stringify(approvedDEXs) === JSON.stringify(dexs)) {
-        console.log('DEXs already whitelisted.')
-      } else {
-        console.log('Updating DEX whitelist...')
-        tx = await dexMgr.batchAddDex(dexs)
-        await tx.wait()
-      }
+    const approvedDEXs = (await dexMgr.approvedDexs()).map((d: string) =>
+      d.toLowerCase()
+    );
 
-      console.log("approvedDEXs",JSON.stringify(approvedDEXs))
+    let tx;
 
-      // Approve function signatures
-      console.log('Checking DEXs signatures whitelist...')
-      
+    if (JSON.stringify(approvedDEXs) === JSON.stringify(dexs)) {
+      console.log("DEXs already whitelisted.");
+    } else {
+      console.log("Updating DEX whitelist...");
+      tx = await dexMgr.batchAddDex(dexs);
+      await tx.wait();
+    }
 
-      let functionsApproved :any[] = []
-   try{
-     functionsApproved = await Promise.all(
-      allowedFuncSignatures.map((signature) => {
-        return dexMgr.isFunctionApproved(signature)
-      })
-    )
-   }
-   catch(err){
-    console.log(err)
-   }
+    console.log("approvedDEXs", JSON.stringify(approvedDEXs));
 
-      console.log("approvedfunctions: " + functionsApproved)
-  
+    // Approve function signatures
+    console.log("Checking DEXs signatures whitelist...");
+
+    let functionsApproved: any[] = [];
+    try {
+      functionsApproved = await Promise.all(
+        allowedFuncSignatures.map((signature) => {
+          return dexMgr.isFunctionApproved(signature);
+        })
+      );
+
+      console.log("approvedfunctions: " + functionsApproved);
+
       const allApproved = functionsApproved.reduce(
         (prev, curr) => prev && curr,
         true
-      )
-      
-      console.log("allApproved: " + allApproved)
+      );
+
+      console.log("allApproved: " + allApproved);
       if (allApproved) {
-        console.log('DEX signatures already whitelisted.')
+        console.log("DEX signatures already whitelisted.");
       } else {
-        console.log('Updating DEX signatures...')
+        console.log("Updating DEX signatures...");
         tx = await dexMgr.batchSetFunctionApprovalBySignature(
           allowedFuncSignatures,
           true
-        )
-        await tx.wait()
+        );
+        await tx.wait();
       }
-  
-      console.log('Done!')
 
+      console.log("Done!");
+    } catch (err) {
+      console.log(err);
     }
-    
-}
 
-export default func
-func.id = 'deploy_dex_manager_facet'
-func.tags = ['DeployDexManagerFacet']
-func.dependencies = ['InitialFacets', 'KanaDiamond', 'InitFacets']
+    await verifyContract(hre, "DexManagerFacet", {
+      address: dexManagerFacet.address,
+    });
+
+    
+  }
+};
+
+export default func;
+func.id = "deploy_dex_manager_facet";
+func.tags = ["DeployDexManagerFacet"];
+func.dependencies = ["InitialFacets", "KanaDiamond", "InitFacets"];

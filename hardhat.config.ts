@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
          // network_id: network_id,
          chainId: network_id,
          allowUnlimitedContractSize: false,
-         timeout: 60000,
+         timeout: 1000000,
          // isFork: true
     },
     goerli: {
@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
     sources: 'src',
   },
   mocha: {
-    timeout: 60000,
+    timeout: 1000000,
   },
 };
 export default config;
