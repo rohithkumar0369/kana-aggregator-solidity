@@ -26,6 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const dexs = config[network.name].map((d: string) => d.toLowerCase());
 
+  console.log("dexs",dexs)
   if (dexs && dexs.length) {
     console.log("Checking DEXs whitelist...");
 
@@ -42,6 +43,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     if (JSON.stringify(approvedDEXs) === JSON.stringify(dexs)) {
       console.log("DEXs already whitelisted.");
     } else {
+      console.log(approvedDEXs)
+      console.log(dexs)
       console.log("Updating DEX whitelist...");
       tx = await dexMgr.batchAddDex(dexs);
       await tx.wait();

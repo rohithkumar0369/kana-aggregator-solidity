@@ -17,6 +17,7 @@ const mUSDC_ADDRESS = '0x7ff459CE3092e8A866aA06DA88D291E2E31230C1'
 const MORASWAP_ADDRESS = '0x696d73D7262223724d60B2ce9d6e20fc31DfC56B'
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const USDC = "0x8a56fa4d0768c5f15c88e40d4256f41819abad56"
+
 describe('GenericSwapFacet', async () => {
   let dexMgr: DexManagerFacet
   let bob: SignerWithAddress
@@ -117,7 +118,7 @@ describe('GenericSwapFacet', async () => {
 
       
 try{
-  let res =await  Kana.connect(bob).swapTokensGeneric(
+  let res = await Kana.connect(bob).swapTokensGeneric(
     utils.randomBytes(32),
     'Moraswap',
     ZERO_ADDRESS,

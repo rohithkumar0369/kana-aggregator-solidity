@@ -5,12 +5,21 @@ import {node_url, accounts} from './utils/network';
 import '@typechain/hardhat'
 
 
-const proxy_url = 'https://devnet.neonevm.org';
+//const proxy_url = 'https://devnet.neonevm.org';
+
+const proxy_url =  'https://proxy.devnet.neonlabs.org/solana';
+
 const network_id = 245022926;
 
 const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.17',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
   },
   defaultNetwork:'neonlabs',
   networks: {

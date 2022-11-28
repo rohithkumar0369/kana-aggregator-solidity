@@ -3,12 +3,11 @@ pragma solidity ^0.8.9;
 
 import { IKana } from "../Interfaces/IKana.sol";
 import { LibAsset } from "../Libraries/LibAsset.sol";
-import { LibAllowList } from "../Libraries/LibAllowList.sol";
 import { ReentrancyGuard } from "../Helpers/ReentrancyGuard.sol";
 import { SwapperV2, LibSwap } from "../Helpers/SwapperV2.sol";
 import { Validatable } from "../Helpers/Validatable.sol";
 import { LibUtil } from "../Libraries/LibUtil.sol";
-import { InvalidReceiver ,ContractCallNotAllowed } from "../Errors/GenericErrors.sol";
+import { InvalidReceiver } from "../Errors/GenericErrors.sol";
 import "hardhat/console.sol";
 /// @title Generic Swap Facet
 /// @author LI.FI (https://li.fi)
@@ -27,9 +26,7 @@ contract GenericSwapFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         uint256 toAmount
     );
 
-    event Test(
-        uint256 length
-    );
+
     /// External Methods ///
 
     /// @notice Performs multiple swaps in one transaction
@@ -66,25 +63,4 @@ contract GenericSwapFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         );
     }
 
-    function test(
-        bytes32 _transactionId,
-        string calldata _integrator,
-        string calldata _referrer,
-        address payable _receiver,
-        uint256 _minAmount,
-        LibSwap.SwapData[] calldata _swapData
-    )external payable refundExcessNative(_receiver) nonReentrant{     
-        uint256 postSwapBalance = _depositAndSwap2(_transactionId, _minAmount, _swapData, _receiver);
-        address receivingAssetId = _swapData[_swapData.length - 1].receivingAssetId;
-
-            emit KanaSwappedGeneric(
-            _transactionId,
-            _integrator,
-            _referrer,
-            _swapData[0].sendingAssetId,
-            receivingAssetId,
-            _swapData[0].fromAmount,
-            postSwapBalance
-        );
-    }
 }

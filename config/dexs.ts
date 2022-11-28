@@ -20,7 +20,8 @@ const config: DEXConfig = {
   ],
   polygonMumbai: [],
   neonlabs :[
-    "0x696d73D7262223724d60B2ce9d6e20fc31DfC56B"  //moraswap
+    "0x696d73d7262223724d60b2ce9d6e20fc31dfc56b",
+    "0xaFA9ba8282Db9eE8c89A63C99b093a9843436767"  //moraswap
   ]
 }
 

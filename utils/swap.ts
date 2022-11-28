@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { constants, Contract, utils } from "ethers";
+import { constants, Contract, utils, providers } from "ethers";
 import { deployments, ethers, network } from "hardhat";
 import {
   DexManagerFacet,
@@ -23,6 +23,7 @@ export async function swapTest() {
   let Kana: GenericSwapFacet;
 
   const diamond = await ethers.getContract("KanaDiamond");
+  const genericFacet = await ethers.getContract("GenericSwapFacet")
   Kana = <GenericSwapFacet>(
     await ethers.getContractAt("GenericSwapFacet", diamond.address)
   );
@@ -34,8 +35,8 @@ export async function swapTest() {
   //@ts-ignore
   bob = await ethers.getSigner("0xdB4daC486137259a899FcA5d7Cb8fB28E2F27Fc5");
 
-  const amountIn = utils.parseUnits("10", 6);
-  const amountOut = utils.parseUnits("10", 6);
+  const amountIn = utils.parseUnits("1", 6);
+  const amountOut = utils.parseUnits("1", 6);
 
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
 
@@ -54,8 +55,21 @@ export async function swapTest() {
 
   console.log(swapData);
 
-  const token = ERC20__factory.connect(mUSDC_ADDRESS, bob);
-  await token.approve(Kana.address, amountIn);
+  // let provider =  ethers.getDefaultProvider()
+
+  const rpcUrl = "https://proxy.devnet.neonlabs.org/solana";
+
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+
+  let gasPrice = await provider.getGasPrice();
+  let nonce = await provider.getTransactionCount(bob.address);
+
+  const token = ERC20__factory.connect(MORA_ADDRESS, bob);
+  await token.approve(genericFacet.address, amountIn, {
+    nonce: nonce,
+    gasLimit: 2000000,
+    gasPrice: gasPrice,
+  });
 
   const postToken = ERC20__factory.connect(WNEON, bob);
 
@@ -63,32 +77,53 @@ export async function swapTest() {
 
   console.log(preBalance);
 
-  try{
-    let res =await  Kana.connect(bob).swapTokensGeneric(
+  nonce = await provider.getTransactionCount(bob.address);
+
+  console.log(gasPrice);
+  //  nonce = await provider.getTransactionCount(bob.address)
+  try {
+    // let res = await Kana.connect(bob).swapTokensGeneric2(
+    //   100000,
+    //   {
+    //     nonce:nonce,
+    //     gasLimit: 20000000,
+    //     gasPrice: gasPrice,
+    //   }
+    // )
+
+    console.log(utils.parseUnits("10", 6).toNumber())
+    // let reciept = await res.wait()
+    // console.log(reciept)
+
+    // console.log(reciept.events)
+
+    let res = await Kana.connect(bob).swapTokensGeneric(
       utils.randomBytes(32),
-      'Moraswap',
+      "Moraswap",
       ZERO_ADDRESS,
       bob.address,
-      utils.parseUnits('10', 6),
+      utils.parseUnits("10", 6),
       [
         {
           callTo: <string>swapData.to,
           approveTo: <string>swapData.to,
-          sendingAssetId: USDC,
-          receivingAssetId: mUSDC_ADDRESS,
+          sendingAssetId: MORA_ADDRESS,
+          receivingAssetId: WNEON,
           callData: <string>swapData?.data,
           fromAmount: amountIn,
           requiresDeposit: true,
         },
       ],
       {
+        nonce: nonce,
         gasLimit: 5000000,
+        gasPrice: gasPrice,
       }
-    )
-  
+    );
+
     console.log(res)
-  }
-  catch(err){
-    console.log(err)
+    console.log(await res.wait())
+  } catch (err) {
+    console.log(err);
   }
 }
