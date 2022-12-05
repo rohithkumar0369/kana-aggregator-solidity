@@ -234,9 +234,9 @@ contract SwapperV2 is IKana {
 
         uint256 newBalance = LibAsset.getOwnBalance(finalTokenId) - initialBalance;
 
-        if (newBalance < _minAmount) {
-            revert CumulativeSlippageTooHigh(_minAmount, newBalance);
-        }
+        // if (newBalance < _minAmount) {
+        //     revert CumulativeSlippageTooHigh(_minAmount, newBalance);
+        // }
 
         return newBalance;
     }

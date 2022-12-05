@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork:'neonlabs',
+  defaultNetwork:'goerli',
   networks: {
     neonlabs: {
       url: proxy_url,
@@ -33,8 +33,13 @@ const config: HardhatUserConfig = {
          // isFork: true
     },
     goerli: {
-      url: node_url('goerli'),
+      url: 'https://eth-goerli.g.alchemy.com/v2/644x8HtviMTzfvqnywPSUnu9hCip-JOw',
       accounts: accounts('goerli')
+    },
+    liberty: {
+      url: node_url('liberty'),
+      chainId: 8080,
+      accounts:accounts('liberty')
     },
   },
   namedAccounts: {

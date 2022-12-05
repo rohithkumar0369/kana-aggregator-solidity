@@ -27,7 +27,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         address: genericSwapFacet.address,
       })
 
-      await swapTest()
+      // await swapTest()
       // console.log(facet.address)
 }
 

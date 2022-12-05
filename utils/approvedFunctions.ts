@@ -13,7 +13,7 @@ export default [
   // '0x54e3f31b', // simpleSwap((address,address,uint256,uint256,uint256,address[],bytes,uint256[],uint256[],address,address,uint256,bytes,uint256,bytes16))
   // '0x415565b0', // transformERC20(address,address,uint256,uint256,(uint32,bytes)[])
   // '0xc43c9ef6', // sellToPancakeSwap(address[],uint256,uint256,uint8)
-  // '0xfb3bdb41', // swapETHForExactTokens(uint256,address[],address,uint256)
+   '0xfb3bdb41', // swapETHForExactTokens(uint256,address[],address,uint256)
   // '0xdb3e2198', // exactOutputSingle((address,address,uint24,address,uint256,uint256,uint256,uint160))
   // '0x91695586', // swap(uint8,uint8,uint256,uint256,uint256)
   // '0x2e95b6c8', // unoswap(address,uint256,uint256,bytes32[])
@@ -21,7 +21,7 @@ export default [
   // '0x46c67b6d', // megaSwap((address,uint256,uint256,uint256,address,(uint256,(address,uint256,(address,uint256,uint256,(uint256,address,uint256,bytes,uint256)[])[])[])[],address,uint256,bytes,uint256,bytes16))
   // '0x54bacd13', // externalSwap(address,address,address,address,uint256,uint256,bytes,bool,uint256)
   // '0x6af479b2', // sellTokenForTokenToUniswapV3(bytes,uint256,uint256,address)
-  // '0x7ff36ab5', // swapExactETHForTokens(uint256,address[],address,uint256)6,
+   '0x7ff36ab5', // swapExactETHForTokens(uint256,address[],address,uint256)6,
   // '0x803ba26d', // sellTokenForEthToUniswapV3(bytes,uint256,uint256,address)
   // '0xa94e78ef', // multiSwap((address,uint256,uint256,uint256,address,(address,uint256,(address,uint256,uint256,(uint256,address,uint256,bytes,uint256)[])[])[],address,uint256,bytes,uint256,bytes16))
   // '0xb0431182', // clipperSwap(address,address,uint256,uint256)
