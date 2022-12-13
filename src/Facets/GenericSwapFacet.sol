@@ -26,10 +26,7 @@ contract GenericSwapFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         uint256 fromAmount,
         uint256 toAmount
     );
-
-    event Test(
-        uint256 length
-    );
+    
     /// External Methods ///
 
     /// @notice Performs multiple swaps in one transaction
@@ -56,28 +53,6 @@ contract GenericSwapFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         LibAsset.transferAsset(receivingAssetId, _receiver, postSwapBalance);
 
         emit KanaSwappedGeneric(
-            _transactionId,
-            _integrator,
-            _referrer,
-            _swapData[0].sendingAssetId,
-            receivingAssetId,
-            _swapData[0].fromAmount,
-            postSwapBalance
-        );
-    }
-
-    function test(
-        bytes32 _transactionId,
-        string calldata _integrator,
-        string calldata _referrer,
-        address payable _receiver,
-        uint256 _minAmount,
-        LibSwap.SwapData[] calldata _swapData
-    )external payable refundExcessNative(_receiver) nonReentrant{     
-        uint256 postSwapBalance = _depositAndSwap2(_transactionId, _minAmount, _swapData, _receiver);
-        address receivingAssetId = _swapData[_swapData.length - 1].receivingAssetId;
-
-            emit KanaSwappedGeneric(
             _transactionId,
             _integrator,
             _referrer,

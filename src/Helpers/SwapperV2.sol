@@ -141,62 +141,11 @@ contract SwapperV2 is IKana {
 
         uint256 newBalance = LibAsset.getOwnBalance(finalTokenId) - initialBalance;
 
-        // if (newBalance < _minAmount) {
-        //     revert CumulativeSlippageTooHigh(_minAmount, newBalance);
-        // }
-
-        return newBalance;
-    }
-
-    function _depositAndSwap2(
-        bytes32 _transactionId,
-        uint256 _minAmount,
-        LibSwap.SwapData[] calldata _swaps,
-        address payable _leftoverReceiver
-    )internal returns (uint256)
-    {
-         uint256 numSwaps = _swaps.length;
-
-        if (numSwaps == 0) {
-            revert NoSwapDataProvided();
+        if (newBalance < _minAmount) {
+            revert CumulativeSlippageTooHigh(_minAmount, newBalance);
         }
 
-        address finalTokenId = _swaps[numSwaps - 1].receivingAssetId;
-        uint256 initialBalance = LibAsset.getOwnBalance(finalTokenId);
-
-        if (LibAsset.isNativeAsset(finalTokenId)) {
-            initialBalance -= msg.value;
-        }
-
-        uint256[] memory initialBalances = _fetchBalances(_swaps);
-        LibAsset.depositAssets(_swaps);
-
-        _executeSwaps(_transactionId, _swaps, _leftoverReceiver, initialBalances);
-
-        uint256 newBalance = LibAsset.getOwnBalance(finalTokenId) - initialBalance;
-
-        // if (newBalance < _minAmount) {
-        //     revert CumulativeSlippageTooHigh(_minAmount, newBalance);
-        // }
-
         return newBalance;
-        // for (uint256 i = 0; i < numSwaps; ) {
-        //     LibSwap.SwapData calldata currentSwap = _swaps[i];
-
-        //     // if (
-        //     //     !((LibAsset.isNativeAsset(currentSwap.sendingAssetId) ||
-        //     //         LibAllowList.contractIsAllowed(currentSwap.approveTo)) &&
-        //     //         LibAllowList.contractIsAllowed(currentSwap.callTo) &&
-        //     //         LibAllowList.selectorIsAllowed(bytes4(currentSwap.callData[:4]))
-        //     //         )
-        //     // ) revert ContractCallNotAllowed();
-
-        //      LibSwap.swap(_transactionId, currentSwap);
-
-        //     unchecked {
-        //         ++i;
-        //     }
-        // }
     }
 
 
@@ -234,9 +183,9 @@ contract SwapperV2 is IKana {
 
         uint256 newBalance = LibAsset.getOwnBalance(finalTokenId) - initialBalance;
 
-        // if (newBalance < _minAmount) {
-        //     revert CumulativeSlippageTooHigh(_minAmount, newBalance);
-        // }
+        if (newBalance < _minAmount) {
+            revert CumulativeSlippageTooHigh(_minAmount, newBalance);
+        }
 
         return newBalance;
     }

@@ -10,7 +10,7 @@ interface IKana {
         string integrator;
         address referrer;
         address sendingAssetId;
-        address receiver;
+        bytes32 receiver;
         uint256 minAmount;
         uint256 destinationChainId;
         bool hasSourceSwaps;

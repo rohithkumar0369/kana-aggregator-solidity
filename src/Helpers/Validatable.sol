@@ -9,9 +9,9 @@ import { LibSwap } from "../Libraries/LibSwap.sol";
 
 contract Validatable {
     modifier validateBridgeData(IKana.BridgeData memory _bridgeData) {
-        if (LibUtil.isZeroAddress(_bridgeData.receiver)) {
-            revert InvalidReceiver();
-        }
+        // if (LibUtil.isZeroAddress(_bridgeData.receiver)) {
+        //     revert InvalidReceiver();
+        // }
         if (_bridgeData.minAmount == 0) {
             revert InvalidAmount();
         }

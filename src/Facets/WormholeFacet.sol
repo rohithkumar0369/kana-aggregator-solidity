@@ -59,6 +59,7 @@ contract WormholeFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
     /// @notice Bridges tokens via Wormhole
     /// @param _bridgeData the core information needed for bridging
     /// @param _wormholeData data specific to Wormhole
+    
      function startBridgeTokensViaWormhole(IKana.BridgeData memory _bridgeData, WormholeData calldata _wormholeData)
         external
         payable
@@ -69,6 +70,59 @@ contract WormholeFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         nonReentrant
     {
         LibAsset.depositAsset(_bridgeData.sendingAssetId, _bridgeData.minAmount);
-        // _startBridge(_bridgeData, _wormholeData);
+        _startBridge(_bridgeData, _wormholeData);
+    }
+
+
+        /// Private Methods ///
+
+    /// @dev Contains the business logic for the bridge via Wormhole
+    /// @param _bridgeData the core information needed for bridging
+    /// @param _wormholeData data specific to Wormhole
+    function _startBridge(IKana.BridgeData memory _bridgeData, WormholeData calldata _wormholeData) private {
+        // uint16 toWormholeChainId = getWormholeChainId(_bridgeData.destinationChainId);
+        // uint16 fromWormholeChainId = getWormholeChainId(block.chainid);
+
+        // {
+        //     if (block.chainid == _bridgeData.destinationChainId) revert CannotBridgeToSameNetwork();
+        //     if (toWormholeChainId == 0) revert UnsupportedChainId(_bridgeData.destinationChainId);
+        //     if (fromWormholeChainId == 0) revert UnsupportedChainId(block.chainid);
+        //     if (fromWormholeChainId == toWormholeChainId) revert CannotBridgeToSameNetwork();
+        // }
+
+        LibAsset.maxApproveERC20(IERC20(_bridgeData.sendingAssetId), address(router), _bridgeData.minAmount);
+
+        if (LibAsset.isNativeAsset(_bridgeData.sendingAssetId)) {
+            router.wrapAndTransferETH{ value: _bridgeData.minAmount }(
+                uint16(_bridgeData.destinationChainId),
+                _bridgeData.receiver,
+                _wormholeData.arbiterFee,
+                _wormholeData.nonce
+            );
+        } else {
+            router.transferTokens(
+                _bridgeData.sendingAssetId,
+                _bridgeData.minAmount,
+                uint16(_bridgeData.destinationChainId),
+                _bridgeData.receiver,
+                _wormholeData.arbiterFee,
+                _wormholeData.nonce
+            );
+        }
+        emit KanaTransferStarted(_bridgeData);
+    }
+
+    /// @notice Gets the wormhole chain id for a given kana chain id
+    /// @param _kanaChainId uint256 of the lifi chain ID
+    /// @return uint16 of the wormhole chain id
+    function getWormholeChainId(uint256 _kanaChainId) private view returns (uint16) {
+        LibMappings.WormholeMappings storage sm = LibMappings.getWormholeMappings();
+        uint16 wormholeChainId = sm.wormholeChainId[_kanaChainId];
+        if (wormholeChainId == 0) revert UnsupportedChainId(_kanaChainId);
+        return wormholeChainId;
+    }
+
+    function claimToken() external {
+        
     }
 }
