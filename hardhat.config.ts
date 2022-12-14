@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork:'goerli',
+  defaultNetwork:'neonlabs',
   networks: {
     neonlabs: {
       url: proxy_url,
@@ -40,6 +40,10 @@ const config: HardhatUserConfig = {
       url: node_url('liberty'),
       chainId: 8080,
       accounts:accounts('liberty')
+    },
+    polygonMumbai: {
+      url: 'https://polygon-mumbai.g.alchemy.com/v2/Ay69wiKhYePKe2fi2C1q1FxLjS3Ey2IY',
+      accounts: accounts('polygonMumbai'),
     },
   },
   namedAccounts: {

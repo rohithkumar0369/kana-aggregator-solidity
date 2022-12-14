@@ -20,7 +20,9 @@ const config: DEXConfig = {
   goerli: [
     '0x7a250d5630b4cf539739df2c5dacb4c659f2488d', // uniswap
   ],
-  polygonMumbai: [],
+  polygonMumbai: [
+
+  ],
   neonlabs :[
     "0x696d73d7262223724d60b2ce9d6e20fc31dfc56b",
     "0xaFA9ba8282Db9eE8c89A63C99b093a9843436767"  //moraswap
