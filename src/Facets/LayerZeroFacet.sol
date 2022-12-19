@@ -24,7 +24,7 @@ contract LayerZeroFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
     struct LzData {
         bytes toAddress;
         uint256 minAmountLD;
-        uint256 dstGasForCall;
+        // uint256 dstGasForCall;
         uint256 lzFee;
         address payable refundAddress;
         // bytes callTo;
