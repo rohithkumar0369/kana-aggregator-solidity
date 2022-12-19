@@ -5,7 +5,7 @@ import {IKana} from "../Interfaces/IKana.sol";
 import {LibAsset, IERC20} from "../Libraries/LibAsset.sol";
 import {LibDiamond} from "../Libraries/LibDiamond.sol";
 import {ReentrancyGuard} from "../Helpers/ReentrancyGuard.sol";
-import {InvalidAmount, InformationMismatch, InvalidConfig, InvalidCaller, UnsupportedChainId, TokenAddressIsZero, AlreadyInitialized, NotInitialized} from "../Errors/GenericErrors.sol";
+import {InvalidAmount, InformationMismatch, InvalidConfig, InvalidCaller,CannotBridgeToSameNetwork, CannotBridgeToSameNetwork,UnsupportedChainId, TokenAddressIsZero, AlreadyInitialized, NotInitialized} from "../Errors/GenericErrors.sol";
 import {SwapperV2, LibSwap} from "../Helpers/SwapperV2.sol";
 import {LibMappings} from "../Libraries/LibMappings.sol";
 import {Validatable} from "../Helpers/Validatable.sol";
@@ -16,22 +16,19 @@ contract LayerZeroFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
     /// @notice The contract address of the LayerZero router on the source chain.
     ILayerZeroEndpoint private immutable router;
 
+     // packet type
+    uint16 public constant PT_SEND = 0;
 
- /// @param dstPoolId Dest pool id.
-    /// @param minAmountLD The min qty you would accept on the destination.
-    /// @param dstGasForCall Additional gas fee for extral call on the destination.
-    /// @param refundAddress Refund adddress. Extra gas (if any) is returned to this address
-    /// @param lzFee Estimated message fee.
-    /// @param callTo The address to send the tokens to on the destination.
-    /// @param callData Additional payload.
+
+
     struct LzData {
-        uint256 dstPoolId;
+        bytes toAddress;
         uint256 minAmountLD;
         uint256 dstGasForCall;
         uint256 lzFee;
         address payable refundAddress;
-        bytes callTo;
-        bytes callData;
+        // bytes callTo;
+        // bytes callData;
     }
 
       constructor(ILayerZeroEndpoint _router) {
@@ -42,7 +39,7 @@ contract LayerZeroFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
 
     /// @notice Bridges tokens via Layer Zero
     /// @param _bridgeData Data contaning core information for bridging
-    function startBridgeTokensViaLayerZeroBridge(IKana.BridgeData memory _bridgeData)
+    function startBridgeTokensViaLayerZeroBridge(IKana.BridgeData memory _bridgeData, LzData calldata _lzData)
         external
         payable
         nonReentrant
@@ -52,7 +49,7 @@ contract LayerZeroFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         validateBridgeData(_bridgeData)
     {
         LibAsset.depositAsset(_bridgeData.sendingAssetId, _bridgeData.minAmount);
-        // _startBridge(_bridgeData);
+         _startBridge(_bridgeData,_lzData);
     }
 
     /// @notice Performs a swap before bridging via LayerZero Bridge
@@ -83,14 +80,34 @@ contract LayerZeroFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
 
     /// @dev Contains the business logic for the bridge via Stargate Bridge
     /// @param _bridgeData Data used purely for tracking and analytics
-    function _startBridge(IKana.BridgeData memory _bridgeData)
+    function _startBridge(IKana.BridgeData memory _bridgeData, LzData calldata _lzData)
         private
         noNativeAsset(_bridgeData)
     {
+        // uint16 toLayerZeroChainId = getLayerZeroChainId(_bridgeData.destinationChainId);
+        // uint16 fromLayerZeroChainId = getLayerZeroChainId(block.chainid);
 
+        // {
+        //     if (block.chainid == _bridgeData.destinationChainId) revert CannotBridgeToSameNetwork();
+        //     if (toLayerZeroChainId == 0) revert UnsupportedChainId(_bridgeData.destinationChainId);
+        //     if (fromLayerZeroChainId == 0) revert UnsupportedChainId(block.chainid);
+        //     if (fromLayerZeroChainId == toLayerZeroChainId) revert CannotBridgeToSameNetwork();
+        // }
+
+        LibAsset.maxApproveERC20(IERC20(_bridgeData.sendingAssetId), address(router), _bridgeData.minAmount);
+        bytes memory lzPayload = abi.encode(PT_SEND, _bridgeData.receiver, _lzData.minAmountLD);
+
+        router.send{value: _lzData.lzFee}(
+            uint16(_bridgeData.destinationChainId), 
+            _lzData.toAddress,
+            lzPayload, 
+            _lzData.refundAddress,
+            address(0x0), 
+            bytes("")
+            );
     }
 
-       /// @notice Gets the Layer Zero chain id for a given kana chain id
+    /// @notice Gets the Layer Zero chain id for a given kana chain id
     /// @param _kanaChainId uint256 of the Kana chain ID
     /// @return uint16 of the wormhole chain id
     function getLayerZeroChainId(uint256 _kanaChainId) private view returns (uint16) {
