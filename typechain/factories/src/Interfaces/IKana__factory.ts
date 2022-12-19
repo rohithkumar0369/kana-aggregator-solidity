@@ -109,7 +109,7 @@ const _abi = [
     name: "KanaTransferStarted",
     type: "event",
   },
-];
+] as const;
 
 export class IKana__factory {
   static readonly abi = _abi;

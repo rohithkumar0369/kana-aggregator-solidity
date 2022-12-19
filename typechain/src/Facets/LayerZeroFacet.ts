@@ -66,46 +66,93 @@ export declare namespace IKana {
   };
 }
 
-export declare namespace WormholeFacet {
-  export type WormholeDataStruct = {
-    arbiterFee: PromiseOrValue<BigNumberish>;
-    nonce: PromiseOrValue<BigNumberish>;
+export declare namespace LayerZeroFacet {
+  export type LzDataStruct = {
+    toAddress: PromiseOrValue<BytesLike>;
+    minAmountLD: PromiseOrValue<BigNumberish>;
+    lzFee: PromiseOrValue<BigNumberish>;
+    refundAddress: PromiseOrValue<string>;
   };
 
-  export type WormholeDataStructOutput = [BigNumber, number] & {
-    arbiterFee: BigNumber;
-    nonce: number;
+  export type LzDataStructOutput = [string, BigNumber, BigNumber, string] & {
+    toAddress: string;
+    minAmountLD: BigNumber;
+    lzFee: BigNumber;
+    refundAddress: string;
   };
 }
 
-export interface WormholeFacetInterface extends utils.Interface {
+export declare namespace LibSwap {
+  export type SwapDataStruct = {
+    callTo: PromiseOrValue<string>;
+    approveTo: PromiseOrValue<string>;
+    sendingAssetId: PromiseOrValue<string>;
+    receivingAssetId: PromiseOrValue<string>;
+    fromAmount: PromiseOrValue<BigNumberish>;
+    callData: PromiseOrValue<BytesLike>;
+    requiresDeposit: PromiseOrValue<boolean>;
+  };
+
+  export type SwapDataStructOutput = [
+    string,
+    string,
+    string,
+    string,
+    BigNumber,
+    string,
+    boolean
+  ] & {
+    callTo: string;
+    approveTo: string;
+    sendingAssetId: string;
+    receivingAssetId: string;
+    fromAmount: BigNumber;
+    callData: string;
+    requiresDeposit: boolean;
+  };
+}
+
+export interface LayerZeroFacetInterface extends utils.Interface {
   functions: {
-    "startBridgeTokensViaWormhole((bytes32,string,string,address,address,bytes32,uint256,uint256,bool,bool),(uint256,uint32))": FunctionFragment;
+    "PT_SEND()": FunctionFragment;
+    "startBridgeTokensViaLayerZeroBridge((bytes32,string,string,address,address,bytes32,uint256,uint256,bool,bool),(bytes,uint256,uint256,address))": FunctionFragment;
+    "swapAndStartBridgeTokensViaOmniBridge((bytes32,string,string,address,address,bytes32,uint256,uint256,bool,bool),(address,address,address,address,uint256,bytes,bool)[])": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "startBridgeTokensViaWormhole"
+    nameOrSignatureOrTopic:
+      | "PT_SEND"
+      | "startBridgeTokensViaLayerZeroBridge"
+      | "swapAndStartBridgeTokensViaOmniBridge"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "PT_SEND", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "startBridgeTokensViaWormhole",
-    values: [IKana.BridgeDataStruct, WormholeFacet.WormholeDataStruct]
+    functionFragment: "startBridgeTokensViaLayerZeroBridge",
+    values: [IKana.BridgeDataStruct, LayerZeroFacet.LzDataStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "swapAndStartBridgeTokensViaOmniBridge",
+    values: [IKana.BridgeDataStruct, LibSwap.SwapDataStruct[]]
   ): string;
 
+  decodeFunctionResult(functionFragment: "PT_SEND", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "startBridgeTokensViaWormhole",
+    functionFragment: "startBridgeTokensViaLayerZeroBridge",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "swapAndStartBridgeTokensViaOmniBridge",
     data: BytesLike
   ): Result;
 
   events: {
     "KanaTransferCompleted(bytes32,address,address,uint256,uint256)": EventFragment;
     "KanaTransferStarted(tuple)": EventFragment;
-    "WormholeChainIdMapped(uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "KanaTransferCompleted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "KanaTransferStarted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WormholeChainIdMapped"): EventFragment;
 }
 
 export interface KanaTransferCompletedEventObject {
@@ -134,24 +181,12 @@ export type KanaTransferStartedEvent = TypedEvent<
 export type KanaTransferStartedEventFilter =
   TypedEventFilter<KanaTransferStartedEvent>;
 
-export interface WormholeChainIdMappedEventObject {
-  lifiChainId: BigNumber;
-  wormholeChainId: BigNumber;
-}
-export type WormholeChainIdMappedEvent = TypedEvent<
-  [BigNumber, BigNumber],
-  WormholeChainIdMappedEventObject
->;
-
-export type WormholeChainIdMappedEventFilter =
-  TypedEventFilter<WormholeChainIdMappedEvent>;
-
-export interface WormholeFacet extends BaseContract {
+export interface LayerZeroFacet extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: WormholeFacetInterface;
+  interface: LayerZeroFacetInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -173,23 +208,47 @@ export interface WormholeFacet extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    startBridgeTokensViaWormhole(
+    PT_SEND(overrides?: CallOverrides): Promise<[number]>;
+
+    startBridgeTokensViaLayerZeroBridge(
       _bridgeData: IKana.BridgeDataStruct,
-      _wormholeData: WormholeFacet.WormholeDataStruct,
+      _lzData: LayerZeroFacet.LzDataStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    swapAndStartBridgeTokensViaOmniBridge(
+      _bridgeData: IKana.BridgeDataStruct,
+      _swapData: LibSwap.SwapDataStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  startBridgeTokensViaWormhole(
+  PT_SEND(overrides?: CallOverrides): Promise<number>;
+
+  startBridgeTokensViaLayerZeroBridge(
     _bridgeData: IKana.BridgeDataStruct,
-    _wormholeData: WormholeFacet.WormholeDataStruct,
+    _lzData: LayerZeroFacet.LzDataStruct,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  swapAndStartBridgeTokensViaOmniBridge(
+    _bridgeData: IKana.BridgeDataStruct,
+    _swapData: LibSwap.SwapDataStruct[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    startBridgeTokensViaWormhole(
+    PT_SEND(overrides?: CallOverrides): Promise<number>;
+
+    startBridgeTokensViaLayerZeroBridge(
       _bridgeData: IKana.BridgeDataStruct,
-      _wormholeData: WormholeFacet.WormholeDataStruct,
+      _lzData: LayerZeroFacet.LzDataStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    swapAndStartBridgeTokensViaOmniBridge(
+      _bridgeData: IKana.BridgeDataStruct,
+      _swapData: LibSwap.SwapDataStruct[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -214,29 +273,36 @@ export interface WormholeFacet extends BaseContract {
       bridgeData?: null
     ): KanaTransferStartedEventFilter;
     KanaTransferStarted(bridgeData?: null): KanaTransferStartedEventFilter;
-
-    "WormholeChainIdMapped(uint256,uint256)"(
-      lifiChainId?: PromiseOrValue<BigNumberish> | null,
-      wormholeChainId?: PromiseOrValue<BigNumberish> | null
-    ): WormholeChainIdMappedEventFilter;
-    WormholeChainIdMapped(
-      lifiChainId?: PromiseOrValue<BigNumberish> | null,
-      wormholeChainId?: PromiseOrValue<BigNumberish> | null
-    ): WormholeChainIdMappedEventFilter;
   };
 
   estimateGas: {
-    startBridgeTokensViaWormhole(
+    PT_SEND(overrides?: CallOverrides): Promise<BigNumber>;
+
+    startBridgeTokensViaLayerZeroBridge(
       _bridgeData: IKana.BridgeDataStruct,
-      _wormholeData: WormholeFacet.WormholeDataStruct,
+      _lzData: LayerZeroFacet.LzDataStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    swapAndStartBridgeTokensViaOmniBridge(
+      _bridgeData: IKana.BridgeDataStruct,
+      _swapData: LibSwap.SwapDataStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    startBridgeTokensViaWormhole(
+    PT_SEND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    startBridgeTokensViaLayerZeroBridge(
       _bridgeData: IKana.BridgeDataStruct,
-      _wormholeData: WormholeFacet.WormholeDataStruct,
+      _lzData: LayerZeroFacet.LzDataStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    swapAndStartBridgeTokensViaOmniBridge(
+      _bridgeData: IKana.BridgeDataStruct,
+      _swapData: LibSwap.SwapDataStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

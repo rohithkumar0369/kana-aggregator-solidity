@@ -6,4 +6,6 @@ export type { IDiamondLoupe } from "./IDiamondLoupe";
 export type { IERC165 } from "./IERC165";
 export type { IERC173 } from "./IERC173";
 export type { IKana } from "./IKana";
+export type { ILayerZeroEndpoint } from "./ILayerZeroEndpoint";
+export type { ILayerZeroUserApplicationConfig } from "./ILayerZeroUserApplicationConfig";
 export type { IWormholeRouter } from "./IWormholeRouter";

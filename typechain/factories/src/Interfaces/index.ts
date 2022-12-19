@@ -6,4 +6,6 @@ export { IDiamondLoupe__factory } from "./IDiamondLoupe__factory";
 export { IERC165__factory } from "./IERC165__factory";
 export { IERC173__factory } from "./IERC173__factory";
 export { IKana__factory } from "./IKana__factory";
+export { ILayerZeroEndpoint__factory } from "./ILayerZeroEndpoint__factory";
+export { ILayerZeroUserApplicationConfig__factory } from "./ILayerZeroUserApplicationConfig__factory";
 export { IWormholeRouter__factory } from "./IWormholeRouter__factory";
