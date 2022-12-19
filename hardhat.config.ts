@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork:'neonlabs',
+  defaultNetwork:'polygonMumbai',
   networks: {
     neonlabs: {
       url: proxy_url,

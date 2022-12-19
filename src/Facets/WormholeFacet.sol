@@ -122,7 +122,7 @@ contract WormholeFacet is IKana, ReentrancyGuard, SwapperV2, Validatable {
         return wormholeChainId;
     }
 
-    function claimToken() external {
+    // function claimToken() external {
         
-    }
+    // }
 }

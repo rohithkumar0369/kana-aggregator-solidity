@@ -10,29 +10,30 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  if (!config[network.name]) {
-    console.log(`No WormholeFacet config set for ${network.name}. Skipping...`)
-    return
-  }
+  // if (!config[network.name]) {
+  //   console.log(`No WormholeFacet config set for ${network.name}. Skipping...`)
+  //   return
+  // }
 
-  const ROUTER_ADDR = config[network.name].wormholeRouter
+  // const ROUTER_ADDR = config[network.name].wormholeRouter
 
-  await deploy('WormholeFacet', {
-    from: deployer,
-    log: true,
-    args: [ROUTER_ADDR],
-    deterministicDeployment: true,
-  })
+  // await deploy('WormholeFacet', {
+  //   from: deployer,
+  //   log: true,
+  //   args: [ROUTER_ADDR],
+  //   deterministicDeployment: true,
+  // })
 
-  const wormholeFacet = await ethers.getContract('WormholeFacet')
-  const diamond = await ethers.getContract('KanaDiamond')
+  // const wormholeFacet = await ethers.getContract('WormholeFacet')
+  // const diamond = await ethers.getContract('KanaDiamond')
 
-  await addOrReplaceFacets([wormholeFacet], diamond.address)
+  // await addOrReplaceFacets([wormholeFacet], diamond.address)
 
-  await verifyContract(hre, 'WormholeFacet', {
-    address: wormholeFacet.address,
-    args: [ROUTER_ADDR],
-  })
+  // await verifyContract(hre, 'WormholeFacet', {
+  //   address: wormholeFacet.address,
+  //   args: [ROUTER_ADDR],
+  // })
+  
 }
 
 export default func

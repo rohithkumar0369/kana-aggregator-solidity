@@ -9,19 +9,23 @@ import { LibAccess } from "../Libraries/LibAccess.sol";
 /// @notice Provides mappings for all facets that may need them
 library LibMappings {
     /// Types ///
-    bytes32 internal constant STARGATE_NAMESPACE = keccak256("com.kana.library.mappings.stargate");
+    bytes32 internal constant LAYERZERO_NAMESPACE = keccak256("com.kana.library.mappings.layerzero");
     bytes32 internal constant WORMHOLE_NAMESPACE = keccak256("com.kana.library.mappings.wormhole");
     bytes32 internal constant AMAROK_NAMESPACE = keccak256("com.kana.library.mappings.amarok");
 
     /// Storage ///
-    struct StargateMappings {
-        mapping(address => uint16) stargatePoolId;
-        mapping(uint256 => uint16) layerZeroChainId;
-        bool initialized;
-    }
+    // struct StargateMappings {
+    //     mapping(address => uint16) stargatePoolId;
+    //     mapping(uint256 => uint16) layerZeroChainId;
+    //     bool initialized;
+    // }
 
     struct WormholeMappings {
         mapping(uint256 => uint16) wormholeChainId;
+    }
+
+     struct LayerZeroMappings {
+        mapping(uint256 => uint16) LayerZeroChainId;
     }
 
     struct AmarokMappings {
@@ -29,8 +33,8 @@ library LibMappings {
     }
 
     /// @dev Fetch local storage for Stargate
-    function getStargateMappings() internal pure returns (StargateMappings storage ms) {
-        bytes32 position = STARGATE_NAMESPACE;
+    function getLayerZeroMappings() internal pure returns (LayerZeroMappings storage ms) {
+        bytes32 position = LAYERZERO_NAMESPACE;
         // solhint-disable-next-line no-inline-assembly
         assembly {
             ms.slot := position
