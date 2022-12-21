@@ -20,10 +20,10 @@ contract OwnershipFacet is IERC173 {
 
     /// Errors ///
 
-    error NoNullOwner();
-    error NewOwnerMustNotBeSelf();
-    error NoPendingOwnershipTransfer();
-    error NotPendingOwner();
+    // error NoNullOwner();
+    // error NewOwnerMustNotBeSelf();
+    // error NoPendingOwnershipTransfer();
+    // error NotPendingOwner();
 
     /// Events ///
 

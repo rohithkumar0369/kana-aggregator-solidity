@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.6;
 
-import {IKana} from "../Interfaces/IKana.sol";
-import {LibSwap} from "../Libraries/LibSwap.sol";
-import {LibAsset} from "../Libraries/LibAsset.sol";
-import {LibAllowList} from "../Libraries/LibAllowList.sol";
-import {InvalidAmount, ContractCallNotAllowed, NoSwapDataProvided, CumulativeSlippageTooHigh} from "../Errors/GenericErrors.sol";
+import "../Interfaces/IKana.sol";
+import "../Libraries/LibSwap.sol";
+import "../Libraries/LibAsset.sol";
+import "../Libraries/LibAllowList.sol";
+import "../Errors/GenericErrors.sol";
 
 /// @title Swapper
 /// @author LI.FI (https://li.fi)

@@ -18,10 +18,11 @@ module.exports = {
             from: "TL4HC28ASqQzdS2rVDpg6QbjctXHVWrdEZ",
             privateKey: "f92f8d036a6b75b81b6bdc0caed77b1fd2976b37b8612e6dbbba06802e609572",
             userFeePercentage: 50,
-            feeLimit: 1e9,
-            originEnergyLimit: 1e7,
+            // feeLimit: 1e9,
+            // originEnergyLimit: 1e7,
             fullHost: 'https://api.shasta.trongrid.io',
-            network_id: '2'
+            network_id: '2',
+            timeout: 10000000
         },
         nile: {
             privateKey: process.env.PRIVATE_KEY_NILE,

@@ -17,7 +17,7 @@ abstract contract ReentrancyGuard {
 
     /// Errors ///
 
-    error ReentrancyError();
+    // error ReentrancyError();
 
     /// Constants ///
 

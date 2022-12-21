@@ -82,8 +82,56 @@ Scripts :
 
 - tronboxproject/migrations/000_initial_migration.js
 - tronboxproject/migrations/001_deploy_initial_facets.js
-- tronboxproject/migrations/002_diamond_deploy.js
 
 ```
 npx tronbox migrate --reset --network shasta
+```
+
+```
+OUTPUT
+------
+
+Running migration: 001_initial_faucet_deploy.js
+  Replacing DexManagerFacet...
+  DexManagerFacet:
+    (base58) TCW2QVzHruuswxgApW32cQCRNrYeT7NnVA
+    (hex) 411bc44d2a3fba229fc4f6704e5bb0902ee3e3a94e
+DexManagerFaucet deployed ✅
+  Deploying DiamondLoupeFacet...
+  DiamondLoupeFacet:
+    (base58) TAdJyBYedg5Kn4ASFrYxHrc4WAUrLBX9xE
+    (hex) 410734c9c04c010a13f4dbe9d1a3ade406ac59585c
+DiamondLoupeFacet deployed ✅
+  Deploying GenericSwapFacet...
+  GenericSwapFacet:
+    (base58) TTTJQzki7PAkEszNPqYxU9mqnbzZvsWb24
+    (hex) 41bfca4db648bdcc43175d1f569c8c3ea4d53623a4
+GenericSwapFacet deployed ✅
+  Deploying OwnershipFacet...
+  OwnershipFacet:
+    (base58) TDPhYokWq851SPJAQ8RCwEYuAZoECD3cQu
+    (hex) 41258a30ca23312c0be2e13a5246837c57d87d68e5
+OwnershipFacet deployed ✅
+Deploying DiamondCutFacet...
+  DiamondCutFacet:
+    (base58) TFNhYCERXNvQwtgDRzKgufqDZcFxTsZnRD
+    (hex) 413b4a0472c69ff2ff2932876f5d582f747242bf20
+DiamondCutFacet deployed ✅
+  Deploying KanaDiamond...
+  KanaDiamond:
+    (base58) TAJPmcLnUHi2jcp2jcP3nakJYMFBh5hqER
+    (hex) 4103a0e45d6d5fcf41145d22894287a857f68cf22f
+Saving successful migration to network...
+Saving artifacts...
+```
+
+### Addresses
+
+```
+DexManagerFacet : TCW2QVzHruuswxgApW32cQCRNrYeT7NnVA
+DiamondLoupeFacet : TAdJyBYedg5Kn4ASFrYxHrc4WAUrLBX9xE
+GenericSwapFacet : TTTJQzki7PAkEszNPqYxU9mqnbzZvsWb24
+OwnershipFacet : TDPhYokWq851SPJAQ8RCwEYuAZoECD3cQu
+DiamondCutFacet : TFNhYCERXNvQwtgDRzKgufqDZcFxTsZnRD
+KanaDiamond : TAJPmcLnUHi2jcp2jcP3nakJYMFBh5hqER
 ```

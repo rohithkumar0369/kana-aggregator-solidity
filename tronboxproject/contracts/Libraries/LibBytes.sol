@@ -236,8 +236,8 @@ library LibBytes {
         uint256 _start,
         uint256 _length
     ) internal pure returns (bytes memory) {
-        if (_length + 31 < _length) revert SliceOverflow();
-        if (_bytes.length < _start + _length) revert SliceOutOfBounds();
+        if (_length + 31 < _length) revert("SliceOverflow()");
+        if (_bytes.length < _start + _length) revert("SliceOutOfBounds()");
 
         bytes memory tempBytes;
 
@@ -311,7 +311,7 @@ library LibBytes {
         returns (address)
     {
         if (_bytes.length < _start + 20) {
-            revert AddressOutOfBounds();
+            revert("AddressOutOfBounds()");
         }
         address tempAddress;
 
@@ -331,7 +331,7 @@ library LibBytes {
         returns (uint8)
     {
         if (_bytes.length < _start + 1) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint8 tempUint;
 
@@ -348,7 +348,7 @@ library LibBytes {
         returns (uint16)
     {
         if (_bytes.length < _start + 2) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint16 tempUint;
 
@@ -365,7 +365,7 @@ library LibBytes {
         returns (uint32)
     {
         if (_bytes.length < _start + 4) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint32 tempUint;
 
@@ -382,7 +382,7 @@ library LibBytes {
         returns (uint64)
     {
         if (_bytes.length < _start + 8) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint64 tempUint;
 
@@ -399,7 +399,7 @@ library LibBytes {
         returns (uint96)
     {
         if (_bytes.length < _start + 12) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint96 tempUint;
 
@@ -416,7 +416,7 @@ library LibBytes {
         returns (uint128)
     {
         if (_bytes.length < _start + 16) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint128 tempUint;
 
@@ -433,7 +433,7 @@ library LibBytes {
         returns (uint256)
     {
         if (_bytes.length < _start + 32) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         uint256 tempUint;
 
@@ -450,7 +450,7 @@ library LibBytes {
         returns (bytes32)
     {
         if (_bytes.length < _start + 32) {
-            revert UintOutOfBounds();
+            revert("UintOutOfBounds()");
         }
         bytes32 tempBytes32;
 

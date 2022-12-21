@@ -38,7 +38,7 @@ contract KanaDiamond {
         address facet = ds.selectorToFacetAndPosition[msg.sig].facetAddress;
 
         if (facet == address(0)) {
-            revert LibDiamond.FunctionDoesNotExist();
+            revert("FunctionDoesNotExist()");
         }
 
         // Execute external function from facet using delegatecall and return any value.
