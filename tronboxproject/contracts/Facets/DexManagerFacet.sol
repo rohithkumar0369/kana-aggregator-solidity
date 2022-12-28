@@ -24,6 +24,7 @@ contract DexManagerFacet {
 
     /// @notice Register the address of a DEX contract to be approved for swapping.
     /// @param _dex The address of the DEX contract to be approved.
+    /// @dev The address _dex is actually a DEX router address which we need to pass as a param.
     function addDex(address _dex) external {
         if (msg.sender != LibDiamond.contractOwner()) {
             LibAccess.enforceAccessControl();
