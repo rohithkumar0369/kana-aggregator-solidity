@@ -12,7 +12,7 @@ import "../Interfaces/IERC20.sol";
 import "../Interfaces/ITransitSwapFees.sol";
 import "../Interfaces/IKana.sol";
 
-contract TransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
+contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
     using SafeMath for uint256;
 
     address private _transit_swap;
