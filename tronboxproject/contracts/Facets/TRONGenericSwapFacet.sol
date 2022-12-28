@@ -16,7 +16,7 @@ import "../Helpers/TransitStructs.sol";
 /// @author LI.FI (https://li.fi)
 /// @notice Provides functionality for swapping through ANY APPROVED DEX
 /// @dev Uses calldata to execute APPROVED arbitrary methods on DEXs
-contract GenericSwapFacet is
+contract TRONGenericSwapFacet is
     IKana,
     ReentrancyGuard,
     TRONTransitSwapRouterV4,
