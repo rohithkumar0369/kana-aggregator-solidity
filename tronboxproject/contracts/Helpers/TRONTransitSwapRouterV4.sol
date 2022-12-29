@@ -8,18 +8,18 @@ import "../Helpers/TransitStructs.sol";
 import "../Helpers/Ownable.sol";
 import "../Helpers/Pausable.sol";
 import "../Libraries/LibSafeMath.sol";
-import "../Interfaces/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../Interfaces/ITransitSwapFees.sol";
 import "../Interfaces/IKana.sol";
 
 contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
     using SafeMath for uint256;
 
-    address private _transit_swap;
+    address internal _transit_swap;
     address private _transit_cross;
     address private _transit_fees;
     //default: Pre-trade fee model
-    mapping(uint8 => bool) private _swap_type_mode;
+    mapping(uint8 => bool) internal _swap_type_mode;
     //whitelist wrapped
     mapping(address => bool) private _wrapped_allowed;
     address private constant TetherToken =
@@ -154,7 +154,7 @@ contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
         bool preTradeModel,
         TransitStructs.TransitSwapDescription calldata desc
     )
-        private
+        internal
         returns (
             uint256 swapAmount,
             uint256 fee,
@@ -235,7 +235,7 @@ contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
         bool preTradeModel,
         TransitStructs.TransitSwapDescription calldata desc,
         uint256 beforeBalance
-    ) private returns (uint256 returnAmount, uint256 fee) {
+    ) internal returns (uint256 returnAmount, uint256 fee) {
         if (TransferHelper.isETH(desc.dstToken)) {
             if (preTradeModel) {
                 returnAmount = desc.dstReceiver.balance.sub(beforeBalance);
@@ -315,10 +315,16 @@ contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
         }
     }
 
-    function swap(
+    function _swap(
         TransitStructs.TransitSwapDescription calldata desc,
         TransitStructs.CallbytesDescription calldata callbytesDesc
-    ) external payable nonReentrant whenNotPaused {
+    )
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        returns (uint256 returnAmount, uint256 postFee)
+    {
         require(
             callbytesDesc.calldatas.length > 0,
             "TransitSwap: data should be not zero"
@@ -357,7 +363,7 @@ contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
             }
         }
 
-        (uint256 returnAmount, uint256 postFee) = _afterSwap(
+        (returnAmount, postFee) = _afterSwap(
             preTradeModel,
             desc,
             beforeBalance
@@ -366,6 +372,7 @@ contract TRONTransitSwapRouterV4 is Ownable, ReentrancyGuard, Pausable, IKana {
             fee = postFee;
         }
         _emitTransit(desc, preTradeModel, fee, returnAmount);
+        return (returnAmount, postFee);
     }
 
     function _beforeCross(TransitStructs.TransitSwapDescription calldata desc)
